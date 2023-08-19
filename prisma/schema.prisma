@@ -1,0 +1,34 @@
+// schema.prisma
+datasource db {
+  provider = "mongodb"
+  url      = env("DB_URL") // Use a different variable name
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Upazila {
+  id        Int      @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
+  name      String
+  institutes Institute[]
+}
+
+model InstituteType {
+  id       Int      @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
+  name     String
+  institutes Institute[]
+}
+
+model Institute {
+  id             Int      @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
+  name           String
+  location       String
+  institutesNum  Int
+  eiin           String
+  distance       String
+  upazila        Upazila  @relation(fields: [upazilaId], references: [id])
+  upazilaId      Int
+  type           InstituteType @relation(fields: [typeId], references: [id])
+  typeId         Int
+}
