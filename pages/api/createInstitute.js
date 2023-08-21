@@ -1,42 +1,40 @@
 import { MongoClient } from 'mongodb';
 
-const uri = 'mongodb+srv://dev_admin:dev_admin@cluster0.wtpkorv.mongodb.net/?retryWrites=true&w=majority';
-const client = new MongoClient(uri);
-async function connect() {
-  try {
-    await client.connect();
-    console.log('Connected to MongoDB Atlas');
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-  }
-}
-
-connect();
-
-
-
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    try {
-      const { instituteName, location, distance, studentsNumber, eiin, typeId, upazilaId } = req.body;
+    const {
+      instituteName,
+      location,
+      distance,
+      studentsNumber,
+      eiin,
+      upazilaName,
+      instituteType,
+    } = req.body;
 
+    try {
+      const uri = 'mongodb+srv://dev_admin:dev_admin@cluster0.wtpkorv.mongodb.net/?retryWrites=true&w=majority';
+      const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+      await client.connect();
       const db = client.db('test');
-      const collection = db.collection('Institute'); // Specify the collection name
+      const instituteCollection = db.collection('institutes');
 
       const newInstitute = {
         name: instituteName,
         location,
         distance,
-        institutesNum: parseInt(studentsNumber),
+        institutesNum: studentsNumber,
         eiin,
-        typeId,
-        upazilaId,
+        upazila: upazilaName,
+        type: instituteType,
       };
 
-      const result = await collection.insertOne(newInstitute);
+      const result = await instituteCollection.insertOne(newInstitute);
 
-      res.status(201).json(result.ops[0]);
+      client.close();
 
+      res.status(200).json('Data inserted Successfully');
     } catch (error) {
       console.error('Error creating institute:', error);
       res.status(500).json({ error: 'An error occurred while creating the institute.' });
