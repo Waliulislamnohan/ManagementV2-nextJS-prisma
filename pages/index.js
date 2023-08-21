@@ -26,13 +26,11 @@ export default function Home() {
           institutesNum: studentsNumber,
           eiin,
           distance,
-          typeId: 1, // Hardcoded typeId
-          upazilaId: 1, // Hardcoded upazilaId
           upazilaName,
           instituteType,
         }),
       });
-	  
+
       if (response.ok) {
         const createdInstitute = await response.json();
         console.log('Institute created:', createdInstitute);
