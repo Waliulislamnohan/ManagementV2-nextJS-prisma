@@ -32,7 +32,7 @@ export default function Home() {
           instituteType,
         }),
       });
-
+	  
       if (response.ok) {
         const createdInstitute = await response.json();
         console.log('Institute created:', createdInstitute);

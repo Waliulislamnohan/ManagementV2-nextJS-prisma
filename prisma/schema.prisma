@@ -9,26 +9,26 @@ generator client {
 }
 
 model Upazila {
-  id        Int      @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
-  name      String
+  id         Int         @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
+  name       String
   institutes Institute[]
 }
 
 model InstituteType {
-  id       Int      @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
-  name     String
+  id         Int         @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
+  name       String
   institutes Institute[]
 }
 
 model Institute {
-  id             Int      @id @map("_id") // Use @map("_id") to indicate MongoDB's primary key
-  name           String
-  location       String
-  institutesNum  Int
-  eiin           String
-  distance       String
-  upazila        Upazila  @relation(fields: [upazilaId], references: [id])
-  upazilaId      Int
-  type           InstituteType @relation(fields: [typeId], references: [id])
-  typeId         Int
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  location      String
+  institutesNum Int
+  eiin          String
+  distance      String
+  upazila       Upazila       @relation(fields: [upazilaId], references: [id])
+  upazilaId     Int
+  type          InstituteType @relation(fields: [typeId], references: [id])
+  typeId        Int
 }
