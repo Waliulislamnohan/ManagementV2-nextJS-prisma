@@ -7,16 +7,24 @@ export default function SearchPage() {
   const [institutes, setInstitutes] = useState([]);
   const [editingInstituteId, setEditingInstituteId] = useState(null);
   const [editedName, setEditedName] = useState('');
-  
+  const [editedLocation, setEditedLocation] = useState('');
+  const [editedInstitutesNum, setEditedInstitutesNum] = useState('');
+  const [editedEiin, setEditedEiin] = useState('');
+  const [editedDistance, setEditedDistance] = useState('');
+
+
   const handleEdit = (instituteId) => {
     setEditingInstituteId(instituteId);
     const institute = institutes.find((inst) => inst._id === instituteId);
     setEditedName(institute.name);
+    setEditedLocation(institute.location);
+    setEditedInstitutesNum(institute.institutesNum);
+    setEditedEiin(institute.eiin);
+    setEditedDistance(institute.distance);
   };
-  
+
   const handleSaveEdit = async (instituteId) => {
     try {
-      // Update the institute's data in the database using an API call
       await fetch(`/api/editInstitute/${instituteId}`, {
         method: 'PUT',
         headers: {
@@ -24,24 +32,40 @@ export default function SearchPage() {
         },
         body: JSON.stringify({
           name: editedName,
-          // Other edited fields
+          location: editedLocation,
+          institutesNum: editedInstitutesNum,
+          eiin: editedEiin,
+          distance: editedDistance,
         }),
       });
-  
+
       // Update the local state with the edited data
       const updatedInstitutes = institutes.map((inst) =>
-        inst._id === instituteId ? { ...inst, name: editedName } : inst
+        inst._id === instituteId
+          ? {
+              ...inst,
+              name: editedName,
+              location: editedLocation,
+              institutesNum: editedInstitutesNum,
+              eiin: editedEiin,
+              distance: editedDistance,
+            }
+          : inst
       );
       setInstitutes(updatedInstitutes);
-  
+
       // Clear the editing state
       setEditingInstituteId(null);
       setEditedName('');
+      setEditedLocation('');
+      setEditedInstitutesNum('');
+      setEditedEiin('');
+      setEditedDistance('');
     } catch (error) {
       console.error('Error editing institute:', error);
     }
   };
-  
+
   const handleCancelEdit = () => {
     setEditingInstituteId(null);
     setEditedName('');
@@ -129,12 +153,31 @@ const handleDelete = async (instituteId) => {
   <li key={institute._id}>
     {institute._id === editingInstituteId ? (
       <div>
-        <input
-          type="text"
-          value={editedName}
-          onChange={(e) => setEditedName(e.target.value)}
+      <input
+            type="text"
+            value={editedName}
+            onChange={(e) => setEditedName(e.target.value)}
+          />
+          <input
+            type="text"
+            value={editedLocation}
+            onChange={(e) => setEditedLocation(e.target.value)}
+          />
+          <input
+            type="number"
+            value={editedInstitutesNum}
+            onChange={(e) => setEditedInstitutesNum(e.target.value)}
+          />
+          <input
+            type="text"
+            value={editedEiin}
+            onChange={(e) => setEditedEiin(e.target.value)}
+          />
+          <input
+            type="text"
+            value={editedDistance}
+            onChange={(e) => setEditedDistance(e.target.value)}
         />
-        {/* Other input fields for editing */}
         <button onClick={() => handleSaveEdit(institute._id)}>Save</button>
         <button onClick={() => handleCancelEdit()}>Cancel</button>
       </div>
@@ -142,7 +185,10 @@ const handleDelete = async (instituteId) => {
       <div>
         <p>Name: {institute.name}</p>
         <p>Location: {institute.location}</p>
-        {/* Other display information */}
+        <p>Distance from Upazila: {institute.distance}</p>
+        <p>Student Number: {institute.institutesNum}</p>
+        <p>EIIN: {institute.eiin}</p>
+      
         <button onClick={() => handleEdit(institute._id)}>Edit</button>
         <button onClick={() => handleDelete(institute._id)}>Delete</button>
       </div>
