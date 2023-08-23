@@ -158,7 +158,7 @@ const handleDelete = async (instituteId) => {
   const { data: upazilas } = useSWR('/api/getUpazilas', fetcher);
   const { data: instituteTypes } = useSWR('/api/getInstituteTypes', fetcher);
 
-
+      
   return (
     <div className={styles.container}>
       <Head>
@@ -166,16 +166,18 @@ const handleDelete = async (instituteId) => {
         <meta name="description" content="A govment project for tracking information of existing institute of any territory" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-<div className={styles.nav}>
-    <h2>
-    Edu-Link
-    </h2>
-  <h3> - A Institute Monitoring System</h3>
-</div>
+
+      <div className={styles.nav}>
+      <img src="https://i.ibb.co/RP8JRyp/logo.png" />
+          <h2>Edu-Link</h2>
+        <h3> - A Institute Monitoring System</h3>
+      </div>
+
+
       <main className={styles.main}>
 
       <div className={styles.createdata}>
-      <h2>Insert Data :</h2>
+      <h2>Insert Data </h2>
       <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -226,10 +228,10 @@ const handleDelete = async (instituteId) => {
       <div>
 
 
+      <div className={styles.searchdata}>
+      <h2>Search Institutes</h2>
       <div>
-      <h1>Search Institutes</h1>
-      <div>
-        <label>Select Upazila:</label>
+    
         <select value={selectedUpazila} onChange={(e) => setSelectedUpazila(e.target.value)}>
           <option value="">Select Upazila</option>
           {upazilas &&
@@ -241,7 +243,7 @@ const handleDelete = async (instituteId) => {
         </select>
       </div>
       <div>
-        <label>Select Institute Type:</label>
+     
         <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
           <option value="">Select Institute Type</option>
           {instituteTypes &&
@@ -291,7 +293,7 @@ const handleDelete = async (instituteId) => {
         <button onClick={() => handleCancelEdit()}>Cancel</button>
       </div>
     ) : (
-      <div>
+      <div className={styles.institutes}>
         <p>Name: {institute.name}</p>
         <p>Location: {institute.location}</p>
         <p>Distance from Upazila: {institute.distance}</p>
