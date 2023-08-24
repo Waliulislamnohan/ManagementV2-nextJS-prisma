@@ -1,12 +1,17 @@
 // pages/api/searchInstitutes.js
 import { MongoClient } from 'mongodb';
+
+
 export default async function handler(req, res) {
+
+  const mongoUrl = process.env.DB_URL;
+  const dbName = process.env.DB_NAME;
     if (req.method === 'POST') {
       const { upazilaName, instituteType } = req.body;
       let client; // Declare the client variable here
   
       try {
-        const uri = 'mongodb+srv://dev_admin:dev_admin@cluster0.wtpkorv.mongodb.net/?retryWrites=true&w=majority';
+        const uri = mongoUrl;
         client = new MongoClient(uri, {
           useNewUrlParser: true,
           useUnifiedTopology: true,
@@ -14,7 +19,7 @@ export default async function handler(req, res) {
   
         await client.connect();
   
-        const db = client.db('test');
+        const db = client.db(dbName);
   
         const institutes = await db
           .collection('institutes')

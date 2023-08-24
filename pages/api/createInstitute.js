@@ -1,24 +1,26 @@
 import { MongoClient } from 'mongodb';
 
 export default async function handler(req, res) {
+  const mongoUrl = process.env.DB_URL;
+  const dbName = process.env.DB_NAME;
   if (req.method === 'POST') {
     const {
-      instituteName,
+      name: instituteName,
       location,
       distance,
-      studentsNumber,
+      institutesNum: studentsNumber,
       eiin,
-      upazilaName,
-      instituteType,
+      upazila: upazilaName,
+      type: instituteType,
     } = req.body;
 
     try {
-      const uri = 'mongodb+srv://dev_admin:dev_admin@cluster0.wtpkorv.mongodb.net/?retryWrites=true&w=majority';
+      const uri = mongoUrl;
       const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
       await client.connect();
-      const db = client.db('test');
-      const instituteCollection = db.collection('institutes');
+      const db = client.db(dbName);
+
 
       const newInstitute = {
         name: instituteName,
@@ -30,7 +32,7 @@ export default async function handler(req, res) {
         type: instituteType,
       };
 
-      const result = await instituteCollection.insertOne(newInstitute);
+    await db.collection('institutes').insertOne(newInstitute);
 
       client.close();
 

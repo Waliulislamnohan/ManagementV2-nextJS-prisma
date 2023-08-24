@@ -1,11 +1,13 @@
 import { MongoClient } from 'mongodb';
 
 export default async function handler(req, res) {
+  const mongoUrl = process.env.DB_URL;
+  const dbName = process.env.DB_NAME;
   if (req.method === 'GET') {
     let client; // Declare the client variable
 
     try {
-        const uri = 'mongodb+srv://dev_admin:dev_admin@cluster0.wtpkorv.mongodb.net/?retryWrites=true&w=majority'; // Replace with your MongoDB URI // Replace with your MongoDB URI// Replace with your MongoDB URI
+        const uri = mongoUrl;
       client = new MongoClient(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -13,7 +15,7 @@ export default async function handler(req, res) {
 
       await client.connect();
 
-      const db = client.db('test'); // Replace with your database name
+      const db = client.db(dbName); // Replace with your database name
       const institutes = await db.collection('institutes').find().toArray();
 
       // Extract unique institute types from the institutes

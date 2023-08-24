@@ -1,13 +1,16 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import React, { useState } from 'react';
-import useSWR from 'swr';
+import React, { useState,useEffect } from 'react';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Home() {
   const [upazilaName, setUpazilaName] = useState('');
   const [instituteType, setInstituteType] = useState('');
   const [eiin, setEiin] = useState('');
-  const [studentsNumber, setStudentsNumber] = useState(0); // Parse as an integer
+  const [studentsNumber, setStudentsNumber] = useState(''); // Parse as an integer
   const [instituteName, setInstituteName] = useState('');
   const [distance, setDistance] = useState('');
   const [location, setLocation] = useState('');
@@ -22,6 +25,8 @@ export default function Home() {
   const [editedEiin, setEditedEiin] = useState('');
   const [editedDistance, setEditedDistance] = useState('');
 
+  const [upazilas, setUpazilas] = useState([]);
+  const [instituteTypes, setInstituteTypes] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,17 +40,21 @@ export default function Home() {
         body: JSON.stringify({
           name: instituteName,
           location,
+          distance,
           institutesNum: studentsNumber,
           eiin,
-          distance,
-          upazilaName,
-          instituteType,
+          upazila: upazilaName,
+          type: instituteType,
         }),
       });
 
       if (response.ok) {
         const createdInstitute = await response.json();
         console.log('Institute created:', createdInstitute);
+        toast.success('Institute created successfully!', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000, // Set the duration the notification will be shown (in milliseconds)
+        });
       } else {
         console.error('Error creating institute:', response.statusText);
       }
@@ -154,9 +163,32 @@ const handleDelete = async (instituteId) => {
   }
 };
 
-  const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data: upazilas } = useSWR('/api/getUpazilas', fetcher);
-  const { data: instituteTypes } = useSWR('/api/getInstituteTypes', fetcher);
+ 
+useEffect(() => {
+  // Fetch available upazilas and institute types here
+  // For example, using an API request or predefined data
+  const fetchUpazilas = async () => {
+    // Replace this with your actual API endpoint or data fetching logic
+    const response = await fetch('/api/getUpazilas');
+    if (response.ok) {
+      const data = await response.json();
+      setUpazilas(data);
+    }
+  };
+  
+  const fetchInstituteTypes = async () => {
+    // Replace this with your actual API endpoint or data fetching logic
+    const response = await fetch('/api/getInstituteTypes');
+    if (response.ok) {
+      const data = await response.json();
+      setInstituteTypes(data);
+    }
+  };
+  
+  fetchUpazilas();
+  fetchInstituteTypes();
+}, []);
+
 
       
   return (
@@ -177,49 +209,56 @@ const handleDelete = async (instituteId) => {
       <main className={styles.main}>
 
       <div className={styles.createdata}>
-      <h2>Insert Data </h2>
+      <h2>Insert Data </h2>      <ToastContainer />
       <form onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Upazila Name"
             value={upazilaName}
             onChange={(e) => setUpazilaName(e.target.value)}
+            required
           />
           <input
             type="text"
             placeholder="Institute Type"
             value={instituteType}
             onChange={(e) => setInstituteType(e.target.value)}
+            required
           />
           <input
             type="text"
             placeholder="EIIN"
             value={eiin}
             onChange={(e) => setEiin(e.target.value)}
+            required
           />
           <input
             type="number"
             placeholder="Students Number"
             value={studentsNumber}
             onChange={(e) => setStudentsNumber(parseInt(e.target.value))}
+            required
           />
           <input
             type="text"
             placeholder="Institute Name"
             value={instituteName}
             onChange={(e) => setInstituteName(e.target.value)}
+            required
           />
           <input
             type="text"
             placeholder="Distance"
             value={distance}
             onChange={(e) => setDistance(e.target.value)}
+            required
           />
           <input
             type="text"
             placeholder="Location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
+            required
           />
           <button type="submit">Submit</button>
         </form>
@@ -234,7 +273,7 @@ const handleDelete = async (instituteId) => {
     
         <select value={selectedUpazila} onChange={(e) => setSelectedUpazila(e.target.value)}>
           <option value="">Select Upazila</option>
-          {upazilas &&
+          {upazilas.length > 0  &&
             upazilas.map((upazila) => (
               <option key={upazila} value={upazila}>
                 {upazila}
@@ -246,7 +285,7 @@ const handleDelete = async (instituteId) => {
      
         <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
           <option value="">Select Institute Type</option>
-          {instituteTypes &&
+          {instituteTypes.length > 0 &&
             instituteTypes.map((type) => (
               <option key={type} value={type}>
                 {type}

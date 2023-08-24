@@ -1,6 +1,8 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
+  const mongoUrl = process.env.DB_URL;
+  const dbName = process.env.DB_NAME;
   if (req.method === 'PUT') {
     const { id } = req.query; // Get the institute ID from the URL parameter
     const { name, location, institutesNum, eiin, distance } = req.body;
@@ -8,7 +10,7 @@ export default async function handler(req, res) {
     let client;
 
     try {
-      const uri = 'mongodb+srv://dev_admin:dev_admin@cluster0.wtpkorv.mongodb.net/?retryWrites=true&w=majority';
+      const uri = mongoUrl;
       client = new MongoClient(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -16,7 +18,7 @@ export default async function handler(req, res) {
 
       await client.connect();
 
-      const db = client.db('test');
+      const db = client.db(dbName);
 
       await db.collection('institutes').updateOne(
         { _id: new ObjectId(id) },

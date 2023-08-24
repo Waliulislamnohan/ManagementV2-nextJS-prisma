@@ -34,11 +34,22 @@ select,button {
 
 }
 button {
-	background-color: #4CAF50;
+	background-color: #683091;
 	color: #fff;
 	cursor: pointer;
+	transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+	font-size: 16px;
 }
 
+button:hover {
+	background-color: #8a4dbd;
+	transform: scale(0.95);
+	text-decoration: underline;
+  }
+  
+button:focus {
+	outline: none;
+  }
 img {
 	width: 75px;
 	height: 75px;

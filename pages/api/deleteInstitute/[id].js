@@ -2,12 +2,14 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
+  const mongoUrl = process.env.DB_URL;
+  const dbName = process.env.DB_NAME;
   if (req.method === 'DELETE') {
     const instituteId = req.query.id;
     let client; // Declare the client variable here
 
     try {
-      const uri = 'mongodb+srv://dev_admin:dev_admin@cluster0.wtpkorv.mongodb.net/?retryWrites=true&w=majority'; // Replace with your MongoDB URI
+      const uri =  mongoUrl;
       client = new MongoClient(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -15,7 +17,7 @@ export default async function handler(req, res) {
 
       await client.connect();
 
-      const db = client.db('test'); // Replace with your database name
+      const db = client.db(dbName); // Replace with your database name
       const collection = db.collection('institutes');
 
       const deleteResult = await collection.deleteOne({ _id: new ObjectId(instituteId) });

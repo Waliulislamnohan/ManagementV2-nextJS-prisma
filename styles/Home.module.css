@@ -1,9 +1,8 @@
 .container {
 	min-height: 100vh;
-	padding: 0 0.5rem;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+
 	align-items: center;
 	height: 100%;
 	width: 100%;
@@ -11,8 +10,8 @@
 
 .main {
 	padding: 0 0;
-	flex: 1;
-	display: flex;
+	display:flex;
+	margin-top: 2rem;
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 1rem;
@@ -39,11 +38,7 @@
 	padding: 10px 10px;
 
 }
-@media (max-width: 480px) {
-    .nav {
-		width:40%;
-    }
-}
+
 .searchdata {
 	
 	width: 500px;
@@ -63,4 +58,31 @@
 	padding: 20px;
 	margin-bottom: 20px;
 
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+    .createdata {
+		width:500px;
+		align-items: center;
+    }
+	.searchdata {
+		width: 550px;
+		align-items: center;
+	}
+}
+@media (max-width: 480px) {
+    .createdata {
+		width:350px;
+		align-items: center;
+    }
+	.searchdata {
+		width: 350px;
+		align-items: center;
+	}
+	.nav {
+		width: 100%;
+		align-items: center;
+	}
+	.main {
+		justify-content: center;
+	}
 }
