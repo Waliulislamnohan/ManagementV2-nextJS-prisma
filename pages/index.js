@@ -180,9 +180,9 @@ const handleDelete = async (instituteId) => {
 };
 
  
-
+//  if (submitClicked || !submitClicked) {
 useEffect(() => {
-  if (submitClicked || !submitClicked) {
+
     // Fetch available upazilas and institute types here
     // For example, using an API request or predefined data
     const fetchUpazilas = async () => {
@@ -208,10 +208,10 @@ useEffect(() => {
 
     // Reset the submit trigger flag
     setSubmitClicked(false);
-  }
-}, [submitClicked, handleSubmit]);
+  
+},[]);
 
-
+ //[submitClicked, handleSubmit]
 
       
   return (
