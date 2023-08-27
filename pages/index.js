@@ -28,6 +28,9 @@ export default function Home() {
   const [upazilas, setUpazilas] = useState([]);
   const [instituteTypes, setInstituteTypes] = useState([]);
 
+  const [submitClicked, setSubmitClicked] = useState(false);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,8 +54,9 @@ export default function Home() {
       if (response.ok) {
         const createdInstitute = await response.json();
         console.log('Institute created:', createdInstitute);
+        setSubmitClicked(true);
         toast.success('Institute created successfully!', {
-          position: toast.POSITION.TOP_CENTER,
+          position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000, // Set the duration the notification will be shown (in milliseconds)
         });
       } else {
@@ -60,6 +64,10 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Error creating institute:', error);
+      toast.error('An error occurred!', {
+        position: 'bottom-right', // You can set the desired position here
+        autoClose: 3000, // Set the duration the toast will be shown (in milliseconds)
+      });
     }
   };
 
@@ -104,7 +112,10 @@ export default function Home() {
           : inst
       );
       setInstitutes(updatedInstitutes);
-
+      toast.success('Institute edited successfully!', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
       // Clear the editing state
       setEditingInstituteId(null);
       setEditedName('');
@@ -144,6 +155,7 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Error searching institutes:', error);
+
     }
   };
 const handleDelete = async (instituteId) => {
@@ -155,6 +167,10 @@ const handleDelete = async (instituteId) => {
     if (response.ok) {
       // Refresh the institute list after deletion
       handleSearch();
+      toast.success('Institute Deleted successfully!', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     } else {
       console.error('Error deleting institute:', response.statusText);
     }
@@ -164,30 +180,37 @@ const handleDelete = async (instituteId) => {
 };
 
  
+
 useEffect(() => {
-  // Fetch available upazilas and institute types here
-  // For example, using an API request or predefined data
-  const fetchUpazilas = async () => {
-    // Replace this with your actual API endpoint or data fetching logic
-    const response = await fetch('/api/getUpazilas');
-    if (response.ok) {
-      const data = await response.json();
-      setUpazilas(data);
-    }
-  };
-  
-  const fetchInstituteTypes = async () => {
-    // Replace this with your actual API endpoint or data fetching logic
-    const response = await fetch('/api/getInstituteTypes');
-    if (response.ok) {
-      const data = await response.json();
-      setInstituteTypes(data);
-    }
-  };
-  
-  fetchUpazilas();
-  fetchInstituteTypes();
-}, []);
+  if (submitClicked) {
+    // Fetch available upazilas and institute types here
+    // For example, using an API request or predefined data
+    const fetchUpazilas = async () => {
+      // Replace this with your actual API endpoint or data fetching logic
+      const response = await fetch('/api/getUpazilas');
+      if (response.ok) {
+        const data = await response.json();
+        setUpazilas(data);
+      }
+    };
+
+    const fetchInstituteTypes = async () => {
+      // Replace this with your actual API endpoint or data fetching logic
+      const response = await fetch('/api/getInstituteTypes');
+      if (response.ok) {
+        const data = await response.json();
+        setInstituteTypes(data);
+      }
+    };
+
+    fetchUpazilas();
+    fetchInstituteTypes();
+
+    // Reset the submit trigger flag
+    setSubmitClicked(false);
+  }
+}, [submitClicked, handleSubmit]);
+
 
 
       
@@ -196,7 +219,7 @@ useEffect(() => {
       <Head>
         <title>Edu-Link</title>
         <meta name="description" content="A govment project for tracking information of existing institute of any territory" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="https://i.ibb.co/RP8JRyp/logo.png" />
       </Head>
 
       <div className={styles.nav}>
@@ -209,7 +232,8 @@ useEffect(() => {
       <main className={styles.main}>
 
       <div className={styles.createdata}>
-      <h2>Insert Data </h2>      <ToastContainer />
+      <ToastContainer />
+      <h2>Insert Data </h2>      
       <form onSubmit={handleSubmit}>
           <input
             type="text"
