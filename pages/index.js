@@ -182,7 +182,7 @@ const handleDelete = async (instituteId) => {
  
 
 useEffect(() => {
-  if (submitClicked) {
+  if (submitClicked || !submitClicked) {
     // Fetch available upazilas and institute types here
     // For example, using an API request or predefined data
     const fetchUpazilas = async () => {
